@@ -20,15 +20,18 @@ const tasks: Task[] = [
   { name: 'Mobile Responsive Check', category: 'QA', status: 'In Progress', done: false },
 ]
 
-function statusColor(status: TaskStatus): string {
-  switch (status) {
-    case 'In Progress': return 'text-blue-500'
-    case 'Pending': return 'text-yellow-600 bg-yellow-50 px-2 py-0.5 rounded text-xs'
-    case 'Done': return 'text-green-600'
-  }
-}
-
 export default function ProjectDashboard({ style }: ProjectDashboardProps) {
+  const statusClasses = (status: TaskStatus): string => {
+    switch (status) {
+      case 'In Progress':
+        return style.highlight
+      case 'Pending':
+        return `${style.badge} px-2 py-0.5`
+      case 'Done':
+        return `${style.highlight} opacity-60`
+    }
+  }
+
   return (
     <div className={`${style.card} p-6 style-transition`}>
       {/* Header */}
@@ -64,11 +67,13 @@ export default function ProjectDashboard({ style }: ProjectDashboardProps) {
             <div className="flex items-center gap-3">
               {/* Checkbox */}
               <div
-                className={`w-5 h-5 rounded-full border-2 border-current/20 flex items-center justify-center shrink-0 ${
-                  task.done ? 'bg-green-500 border-green-500' : ''
+                className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 style-transition ${
+                  task.done
+                    ? `${style.button} border-none`
+                    : 'border-2 border-current/20'
                 }`}
               >
-                {task.done && <span className="text-white text-xs">✓</span>}
+                {task.done && <span className="text-xs">✓</span>}
               </div>
               <div>
                 <p className={`text-sm font-medium ${task.done ? 'line-through opacity-50' : ''}`}>
@@ -77,7 +82,7 @@ export default function ProjectDashboard({ style }: ProjectDashboardProps) {
                 <p className="text-xs opacity-40">{task.category}</p>
               </div>
             </div>
-            <span className={`text-xs font-medium ${statusColor(task.status)}`}>
+            <span className={`text-xs font-medium style-transition ${statusClasses(task.status)}`}>
               {task.status}
             </span>
           </div>
@@ -88,8 +93,8 @@ export default function ProjectDashboard({ style }: ProjectDashboardProps) {
       <div className="flex items-center justify-between mt-4 pt-3 border-t border-current/10">
         <p className="text-xs opacity-40">Showing 4 of 12 tasks</p>
         <div className="flex gap-3 text-sm">
-          <button className="opacity-40 cursor-not-allowed">Prev</button>
-          <button className="font-semibold">Next</button>
+          <button className={`opacity-40 cursor-not-allowed style-transition`}>Prev</button>
+          <button className={`font-semibold ${style.highlight} style-transition`}>Next</button>
         </div>
       </div>
     </div>
